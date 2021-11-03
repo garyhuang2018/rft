@@ -9,7 +9,7 @@ from time import sleep
 
 class DigitIndoor:
     """
-    library for digit indoor to answer the call or
+    library for digit indoor to answer the call or unlock
     """
     def __init__(self):
         pass
@@ -49,6 +49,11 @@ class DigitIndoor:
         socket_port = (indoor_ip, indoor_ip_port)
         self._send_message(msg, socket_port)
 
+    def hangup(self, indoor_ip, indoor_ip_port=8010):
+        msg = '''{"cmd":"AutoTest","data":{"command":"hangup"}} '''
+        socket_port = (indoor_ip, indoor_ip_port)
+        self._send_message(msg, socket_port)
+
     def _send_message(self, msg, ip_port):
         b_msg = msg.encode()
         self.client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -61,4 +66,5 @@ if __name__ == '__main__':
     my.monitor("192.192.255.170", "192.192.6.6")
     sleep(5)
     my.unlock("192.192.255.170")
+    my.hangup("192.192.255.170")
     my.end("192.192.255.170", "test_rf", "3")

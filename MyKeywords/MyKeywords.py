@@ -1,5 +1,6 @@
 # encoding= utf-8
 # __author__= gary
+import hashlib
 import re
 import subprocess
 
@@ -10,15 +11,17 @@ class MyKeywords:
 
     def print_indoor_status(self, response, floor_no, room_no):
         """
-        get the status by the floor and room no
+        get the status by the floor and room no, 1 for online, 0 for offline
         """
         res = response.json()
         for dev in res.get("data"):
             if dev.get('floorNo') == floor_no and dev.get('roomNo') == room_no:
-                 if dev.get('status') == 0:
-                     print('room', floor_no+room_no, 'is offline')
-                 else:
-                     print('room', floor_no + room_no, 'is online')
+                if dev.get('status') == 0:
+                    print('room', floor_no + room_no, 'is offline')
+                    return 0
+                else:
+                    print('room', floor_no + room_no, 'is online')
+                    return 1
 
     def print_wall_switch_status(self, dev_addr):
         """
@@ -34,12 +37,29 @@ class MyKeywords:
         if len(status_results) > 0:
             if str(status_results[0]).find('off') > 0:
                 print('wall switch offline')
+                return 0
             else:
                 print('wall switch online')
+                return 1
         else:
             print('wall switch status not change')
+
+    def get_file_md5(self, file_path) -> str:
+        """
+        根据文件路径，计算MD5值
+        Calculate the md5 value of the file
+        """
+        if file_path is not None:
+            with open(file_path, 'rb') as fp:
+                data = fp.read()
+            file_md5 = hashlib.md5(data).hexdigest()
+            return file_md5
+        else:
+            return 'None'
 
 
 if __name__ == '__main__':
     my = MyKeywords()
-    my.print_wall_switch_status('M7BBB18A06151861')
+    file_p = r'C:\Users\garyh\Desktop\ota_rk3288_outdoor-P3_20210811.zip'
+    print(my.get_file_md5(file_p))
+   # print(my.print_wall_switch_status('M7BBB18A06151861'))

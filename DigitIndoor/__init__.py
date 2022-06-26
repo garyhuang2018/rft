@@ -4,5 +4,6 @@
 """
 from .DigitIndoor import *
 
+
 class MyLib(DigitIndoor):
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
